@@ -1,0 +1,63 @@
+{
+  "name": "@bachman-dev/oxc-config",
+  "version": "0.1.0",
+  "description": "Oxc configurations for use in Bachman Dev projects",
+  "homepage": "https://github.com/bachman-dev/oxc-config",
+  "license": "MIT",
+  "author": "Collin Bachman <collin.r68zdn9d@bachman.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bachman-dev/oxc-config"
+  },
+  "files": [
+    "dist/**/*.{mjs,d.mts}"
+  ],
+  "type": "module",
+  "exports": {
+    "./oxfmt": {
+      "import": {
+        "types": "./dist/oxfmt/index.d.mts",
+        "default": "./dist/oxfmt/index.mjs"
+      }
+    },
+    "./oxlint": {
+      "import": {
+        "types": "./dist/oxlint/index.d.mts",
+        "default": "./dist/oxlint/index.mjs"
+      }
+    }
+  },
+  "scripts": {
+    "all": "pnpm test && pnpm build && pnpm typecheck && pnpm build:docs && pnpm format && pnpm lint:fix",
+    "build": "tsdown --config ./tsdown.config.ts",
+    "build:docs": "node ./scripts/docs.ts && oxfmt --write --config oxfmt.config.ts ./src/oxfmt/README.md ./src/oxlint/README.md",
+    "format": "oxfmt --write --config oxfmt.config.ts .",
+    "format:check": "oxfmt --check --config oxfmt.config.ts .",
+    "lint": "oxlint --config oxlint.config.ts .",
+    "lint:fix": "oxlint --config oxlint.config.ts --fix .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "oxfmt": "0.68.0",
+    "oxlint": "1.83.0",
+    "oxlint-tsgolint": "7.0.2002",
+    "tsdown": "0.23.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  },
+  "peerDependencies": {
+    "oxfmt": ">=0.68.0 <1",
+    "oxlint": "^1.83.0"
+  },
+  "peerDependenciesMeta": {
+    "oxfmt": {
+      "optional": true
+    },
+    "oxlint": {
+      "optional": true
+    }
+  },
+  "packageManager": "pnpm@12.5.1+sha512.e3f305bc784a2bc89f5ad3b6138889470fae8d2af5f36b61216ec91c2c3d64089775f9de38aac331044ea40f245cb0d5666392dfdf65824e1907ef6a2c62de5f"
+}
