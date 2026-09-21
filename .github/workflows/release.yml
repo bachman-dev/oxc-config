@@ -1,0 +1,28 @@
+name: Release New Version
+on:
+  release:
+    types: [published]
+jobs:
+  test:
+    name: "Publish Release"
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+      - name: Setup pnpm
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          cache: true
+          require-lockfile: true
+      - name: Build Library
+        run: pnpm build
+      - name: Publish Library
+        run: pnpm publish --access=public --no-git-checks
+        env:
+          NPM_CONFIG_PROVENANCE: true
