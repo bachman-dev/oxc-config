@@ -2,10 +2,10 @@
 
 This project provides the following oxc shared configurations:
 
-| Tool   | Description                                                                           | Settings |
-| ------ | ------------------------------------------------------------------------------------- | -------- |
-| oxfmt  | Used for formatting code and other documents in a codebase                            | View     |
-| oxlint | Enforces code style and quality by checking for errors and offering suggestions/fixes | View     |
+| Tool   | Description                                                                           | Settings                        |
+| ------ | ------------------------------------------------------------------------------------- | ------------------------------- |
+| oxfmt  | Used for formatting code and other documents in a codebase                            | [View](./src/oxfmt//README.md)  |
+| oxlint | Enforces code style and quality by checking for errors and offering suggestions/fixes | [View](./src/oxlint//README.md) |
 
 ## Install
 
