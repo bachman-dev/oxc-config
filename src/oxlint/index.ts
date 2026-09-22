@@ -108,3 +108,10 @@ export default function bachmanDevConfig(userOptions?: OxlintConfigOptions, over
 
   return config;
 }
+
+// Re-exported so a consumer's `oxlint.config.ts` can name the types in this module's public signature. Without a
+// path to them through this package, TypeScript can't write a portable declaration for `export default
+// bachmanDevConfig()` -- under pnpm, `oxlint` resolves through our own virtual store directory, which isn't
+// reachable from the consumer by a bare specifier -- and it errors with TS2883 instead.
+export type { OxlintConfig } from "oxlint";
+export type { OxlintConfigOptions } from "./types.ts";

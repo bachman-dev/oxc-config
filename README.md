@@ -55,11 +55,10 @@ export default defineConfig(
 );
 ```
 
-In your `oxlint.config.ts` file, set a default export of the `bachmanDev` config method:
+In your `oxlint.config.ts` file, set a default export of the `bachmanDevConfig` config method:
 
 ```ts
-import { bachmanDevConfig, jsdocSettings } from "@bachman-dev/oxc-config/oxlint";
-import { type OxlintConfig, defineConfig } from "oxlint";
+import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
 
 export default bachmanDevConfig();
 ```
@@ -78,6 +77,19 @@ If the project needs a config change, you can override any oxlint settings by pa
 import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
 
 export default bachmanDevConfig({ vitest: true }, { options: { typeAware: false, typeCheck: false } });
+```
+
+Both entry points re-export the config types they use, so you can name them without reaching for `oxlint` or `oxfmt`
+directly: `OxlintConfig` and `OxlintConfigOptions` from `@bachman-dev/oxc-config/oxlint`, and `OxfmtConfig` from
+`@bachman-dev/oxc-config/oxfmt`.
+
+```ts
+import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
+import type { OxlintConfigOptions } from "@bachman-dev/oxc-config/oxlint";
+
+const options: OxlintConfigOptions = { vitest: ["**/*.spec.ts"] };
+
+export default bachmanDevConfig(options);
 ```
 
 ## What's Changed from the ESLint Config
