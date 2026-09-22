@@ -264,8 +264,8 @@ const typescript: OxlintRuleGroup = {
       settings: [
         "error",
         {
-          allowDefaultCaseForExhaustiveSwitch: false,
-          considerDefaultExhaustiveForUnions: false,
+          allowDefaultCaseForExhaustiveSwitch: true,
+          considerDefaultExhaustiveForUnions: true,
           defaultCaseCommentPattern: "No default",
           requireDefaultForNonUnion: true,
         },

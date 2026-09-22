@@ -1612,8 +1612,8 @@ No rules were set for this group's category.
 
 ```json
 {
-  "allowDefaultCaseForExhaustiveSwitch": false,
-  "considerDefaultExhaustiveForUnions": false,
+  "allowDefaultCaseForExhaustiveSwitch": true,
+  "considerDefaultExhaustiveForUnions": true,
   "defaultCaseCommentPattern": "No default",
   "requireDefaultForNonUnion": true
 }
