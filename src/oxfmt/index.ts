@@ -11,3 +11,7 @@ export default function bachmanDev(overrides?: OxfmtConfig): OxfmtConfig {
   }
   return { ...config, ...overrides };
 }
+
+// Re-exported so a consumer's `oxfmt.config.ts` can name the type in this module's public signature; see the same
+// re-export in `src/oxlint/index.ts` for why TypeScript needs it.
+export type { OxfmtConfig } from "oxfmt";
