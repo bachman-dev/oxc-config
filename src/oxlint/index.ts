@@ -27,7 +27,7 @@ function buildBaseRuleGroups(options: OxlintConfigOptions): OxlintRuleGroup[] {
   if (typeof options.unicorm === "undefined" || options.unicorm) {
     baseRuleGroups.push(unicorn);
   }
-  if (options.vitest === true || Array.isArray(options.vitest)) {
+  if (typeof options.vitest === "undefined" || options.vitest === true || Array.isArray(options.vitest)) {
     baseRuleGroups.push(vitest);
   }
   return baseRuleGroups;
@@ -81,7 +81,7 @@ export default function bachmanDevConfig(userOptions?: OxlintConfigOptions, over
       },
     };
   }
-  if (options.vitest === true || Array.isArray(options.vitest)) {
+  if (typeof options.vitest === "undefined" || options.vitest === true || Array.isArray(options.vitest)) {
     ourSettings.vitest = {
       typecheck: true,
     };
