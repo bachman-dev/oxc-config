@@ -119,7 +119,7 @@ export const typeScriptDeclarationFiles: OverrideGlobSet = {
 };
 
 export const testFiles: OverrideGlobSet = {
-  description: "test files when `vitest` is set to `true` or an array of test file globs in the config",
+  description: "test files when `vitest` is set to `true` (default) or an array of test file globs in the config",
   globs: (config) =>
     Array.isArray(config.vitest) ? config.vitest : ["**/*.test.{ts,tsx,mts,cts}", "**/*.test-d.{ts,tsx,mts,cts}"],
 };
