@@ -52,9 +52,6 @@ const jsdoc: OxlintRuleGroup = {
     "jsdoc/require-param-name": {
       settings: "error",
     },
-    "jsdoc/require-param-type": {
-      settings: ["error", { defaultDestructuredRootType: "object", setDefaultDestructuredRootType: true }],
-    },
     "jsdoc/require-returns": {
       settings: [
         "error",
@@ -70,13 +67,7 @@ const jsdoc: OxlintRuleGroup = {
     "jsdoc/require-returns-description": {
       settings: "error",
     },
-    "jsdoc/require-returns-type": {
-      settings: "error",
-    },
     "jsdoc/require-throws-type": {
-      settings: "error",
-    },
-    "jsdoc/require-yields-type": {
       settings: "error",
     },
   },
