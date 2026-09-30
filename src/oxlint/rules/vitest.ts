@@ -210,7 +210,7 @@ const vitest: OxlintRuleGroup = {
       settings: "off",
       override: {
         files,
-        settings: ["error", { max: 5 }],
+        settings: ["error", { max: 20 }],
       },
     },
     "vitest/max-nested-describe": {

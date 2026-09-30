@@ -26,7 +26,9 @@ Here is a generated config when `bachmanDevConfig` is exported without disabling
         "augments": {
           "message": "@extends should be used over @augments as it is more evocative of classes and interfaces",
           "replacement": "extends"
-        }
+        },
+        "category": "category",
+        "remarks": "remarks"
       }
     },
     "vitest": { "typecheck": true }
@@ -642,7 +644,7 @@ These settings apply to all lintable files except all TypeScript files, as this 
 {
   "checkGeneric": true,
   "exceptionPatterns": ["^[A-Z]$"],
-  "exceptions": ["_", "fs", "t", "v", "z"],
+  "exceptions": ["_", "fs", "m", "t", "v", "z"],
   "max": 9007199254740991,
   "min": 3,
   "properties": "never"
@@ -714,7 +716,7 @@ These settings apply to all lintable files except all TypeScript files, as this 
 
 ##### Settings
 
-These settings apply to all lintable files except test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings apply to all lintable files except test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 {
@@ -1101,14 +1103,6 @@ No rules were set for this group's category.
 
 #### [🛑 jsdoc/require-param-name](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-param-name)
 
-#### [🛑 jsdoc/require-param-type](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-param-type)
-
-##### Settings
-
-```json
-{ "defaultDestructuredRootType": "object", "setDefaultDestructuredRootType": true }
-```
-
 #### [🛑 jsdoc/require-returns](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-returns)
 
 ##### Settings
@@ -1125,11 +1119,7 @@ No rules were set for this group's category.
 
 #### [🛑 jsdoc/require-returns-description](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-returns-description)
 
-#### [🛑 jsdoc/require-returns-type](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-returns-type)
-
 #### [🛑 jsdoc/require-throws-type](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-throws-type)
-
-#### [🛑 jsdoc/require-yields-type](https://oxc.rs/docs/guide/usage/linter/rules/jsdoc/require-yields-type)
 
 ### Style
 
@@ -1297,7 +1287,7 @@ These rules were ported from typescript-eslint, and are specifically tailored fo
 
 ##### Settings
 
-These settings apply to all lintable files except test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings apply to all lintable files except test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "ignoreStatic": false }
@@ -1480,7 +1470,7 @@ No rules were set for this group's category.
 ##### Settings
 
 ```json
-{ "ignoreArrowShorthand": false, "ignoreVoidOperator": false, "ignoreVoidReturningFunctions": false }
+{ "ignoreArrowShorthand": true, "ignoreVoidOperator": false, "ignoreVoidReturningFunctions": false }
 ```
 
 #### [🛑 typescript/no-deprecated](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-deprecated)
@@ -1843,7 +1833,7 @@ Powerful rules ported from `eslint-plugin-unicorn` for better code style and qua
 ##### Settings
 
 ```json
-{ "exclude": [], "include": [], "strategy": "strict", "useErrorIsError": true }
+{ "exclude": [], "include": [], "strategy": "loose", "useErrorIsError": true }
 ```
 
 > [!TIP]
@@ -1991,7 +1981,7 @@ These are the default settings applied to most lintable files.
 { "checkArguments": true, "checkArrowFunctionBody": true }
 ```
 
-These settings apply only to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings apply only to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "checkArguments": false, "checkArrowFunctionBody": true }
@@ -2109,14 +2099,6 @@ These settings apply only to test files when `vitest` is set to `true` or an arr
   "ignore": [],
   "multipleFileExtensions": true
 }
-```
-
-#### [🛑 unicorn/max-nested-calls](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/max-nested-calls)
-
-##### Settings
-
-```json
-{ "max": 5 }
 ```
 
 #### [🛑 unicorn/no-array-method-this-argument](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-method-this-argument)
@@ -2264,7 +2246,7 @@ Rules that enforce best practices for writing tests using Vitest, scoped only to
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 {
@@ -2275,29 +2257,29 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/hoisted-apis-on-top](https://oxc.rs/docs/guide/usage/linter/rules/vitest/hoisted-apis-on-top)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-conditional-expect](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-expect)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-conditional-tests](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-tests)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-disabled-tests](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-disabled-tests)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-focused-tests](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-focused-tests)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-standalone-expect](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-standalone-expect)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "additionalTestBlockFunctions": ["testFor"] }
@@ -2307,7 +2289,7 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 "multi"
@@ -2315,17 +2297,17 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/require-awaited-expect-poll](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-awaited-expect-poll)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/require-local-test-context-for-concurrent-snapshots](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-local-test-context-for-concurrent-snapshots)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/require-mock-type-parameters](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-mock-type-parameters)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "checkImportFunctions": true }
@@ -2333,17 +2315,17 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/valid-describe-callback](https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-describe-callback)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/valid-expect](https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "alwaysAwait": false, "asyncMatchers": ["toResolve", "toReject"], "maxArgs": 1, "minArgs": 1 }
@@ -2351,13 +2333,13 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/valid-expect-in-promise](https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-expect-in-promise)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/valid-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/valid-title)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "ignoreTypeOfDescribeName": false, "allowArguments": false, "disallowedWords": [] }
@@ -2365,19 +2347,19 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/warn-todo](https://oxc.rs/docs/guide/usage/linter/rules/vitest/warn-todo)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ### Suspicious
 
 #### [🔲📂🛑 vitest/no-commented-out-tests](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-commented-out-tests)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ### Restriction
 
 #### [🔲📂🛑 vitest/require-test-timeout](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-test-timeout)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ### Perf
 
@@ -2387,7 +2369,7 @@ No rules were set for this group's category.
 
 #### [🔲📂🛑 vitest/no-conditional-in-test](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-conditional-in-test)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ### Style
 
@@ -2395,7 +2377,7 @@ This rule throws a linting error only for test files when `vitest` is set to `tr
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "describe": "for", "it": "for", "suite": "for", "test": "for" }
@@ -2413,7 +2395,7 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "fn": "test", "withinDescribe": "it" }
@@ -2423,7 +2405,7 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "fn": "vi" }
@@ -2433,17 +2415,17 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
-{ "max": 5 }
+{ "max": 20 }
 ```
 
 #### [🔲📂🛑 vitest/max-nested-describe](https://oxc.rs/docs/guide/usage/linter/rules/vitest/max-nested-describe)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "max": 3 }
@@ -2451,17 +2433,17 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/no-alias-methods](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-alias-methods)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-duplicate-hooks](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-duplicate-hooks)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-hooks](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-hooks)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "allow": ["afterAll", "beforeAll"] }
@@ -2469,21 +2451,21 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/no-identical-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-identical-title)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-import-node-test](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-import-node-test)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-interpolation-in-snapshots](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-interpolation-in-snapshots)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-large-snapshots](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-large-snapshots)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "allowedSnapshots": {}, "maxSize": 50 }
@@ -2491,49 +2473,49 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/no-mocks-import](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-mocks-import)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-test-prefixes](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-prefixes)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-test-return-statement](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-test-return-statement)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/no-unneeded-async-expect-function](https://oxc.rs/docs/guide/usage/linter/rules/vitest/no-unneeded-async-expect-function)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-called-exactly-once-with](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-exactly-once-with)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-called-once](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-once)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-called-with](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-called-with)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-describe-function-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-describe-function-title)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-each](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-each)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-equality-matcher](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-equality-matcher)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-expect-assertions](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-assertions)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 {
@@ -2545,25 +2527,25 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/prefer-expect-resolves](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-resolves)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-expect-type-of](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-expect-type-of)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-hooks-in-order](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-in-order)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-hooks-on-top](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-hooks-on-top)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-import-in-mock](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-import-in-mock)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "fixable": true }
@@ -2571,13 +2553,13 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/prefer-importing-vitest-globals](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-importing-vitest-globals)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-lowercase-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "allowedPrefixes": [], "ignore": [], "ignoreTopLevelDescribe": true, "lowercaseFirstCharacterOnly": true }
@@ -2585,53 +2567,53 @@ These settings only apply to test files when `vitest` is set to `true` or an arr
 
 #### [🔲📂🛑 vitest/prefer-mock-promise-shorthand](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-promise-shorthand)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-mock-return-shorthand](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-mock-return-shorthand)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-spy-on](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-spy-on)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-strict-boolean-matchers](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-boolean-matchers)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-strict-equal](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-strict-equal)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-to-be](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-to-be-object](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-object)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-to-contain](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-contain)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-to-have-been-called-times](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-been-called-times)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-to-have-length](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-have-length)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/prefer-todo](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-todo)
 
-This rule throws a linting error only for test files when `vitest` is set to `true` or an array of test file globs in the config.
+This rule throws a linting error only for test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 #### [🔲📂🛑 vitest/require-top-level-describe](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-top-level-describe)
 
 ##### Settings
 
-These settings only apply to test files when `vitest` is set to `true` or an array of test file globs in the config.
+These settings only apply to test files when `vitest` is set to `true` (default) or an array of test file globs in the config.
 
 ```json
 { "maxNumberOfTopLevelDescribes": 100 }

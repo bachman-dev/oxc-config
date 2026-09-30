@@ -160,7 +160,7 @@ const typescript: OxlintRuleGroup = {
     "typescript/no-confusing-void-expression": {
       settings: [
         "error",
-        { ignoreArrowShorthand: false, ignoreVoidOperator: false, ignoreVoidReturningFunctions: false },
+        { ignoreArrowShorthand: true, ignoreVoidOperator: false, ignoreVoidReturningFunctions: false },
       ],
     },
     "typescript/no-deprecated": {

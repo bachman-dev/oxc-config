@@ -435,7 +435,7 @@ const eslint: OxlintRuleGroup = {
         {
           checkGeneric: true,
           exceptionPatterns: ["^[A-Z]$"],
-          exceptions: ["_", "fs", "t", "v", "z"],
+          exceptions: ["_", "fs", "m", "t", "v", "z"],
           max: Number.MAX_SAFE_INTEGER,
           min: 3,
           properties: "never",

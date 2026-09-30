@@ -36,7 +36,7 @@ const unicorn: OxlintRuleGroup = {
       settings: "error",
     },
     "unicorn/no-instanceof-builtins": {
-      settings: ["error", { exclude: [], include: [], strategy: "strict", useErrorIsError: true }],
+      settings: ["error", { exclude: [], include: [], strategy: "loose", useErrorIsError: true }],
       admonishments: [
         {
           type: "tip",
@@ -345,9 +345,6 @@ const unicorn: OxlintRuleGroup = {
           multipleFileExtensions: true,
         },
       ],
-    },
-    "unicorn/max-nested-calls": {
-      settings: ["error", { max: 5 }],
     },
     "unicorn/no-array-method-this-argument": {
       settings: "error",
