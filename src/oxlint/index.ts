@@ -78,6 +78,8 @@ export default function bachmanDevConfig(userOptions?: OxlintConfigOptions, over
           message: "@extends should be used over @augments as it is more evocative of classes and interfaces",
           replacement: "extends",
         },
+        category: "category",
+        remarks: "remarks",
       },
     };
   }
