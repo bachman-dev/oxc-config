@@ -14,18 +14,9 @@
   ],
   "type": "module",
   "exports": {
-    "./oxfmt": {
-      "import": {
-        "types": "./dist/oxfmt/index.d.mts",
-        "default": "./dist/oxfmt/index.mjs"
-      }
-    },
-    "./oxlint": {
-      "import": {
-        "types": "./dist/oxlint/index.d.mts",
-        "default": "./dist/oxlint/index.mjs"
-      }
-    }
+    "./oxfmt": "./dist/oxfmt/index.mjs",
+    "./oxlint": "./dist/oxlint/index.mjs",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "all": "pnpm test && pnpm build && pnpm typecheck && pnpm build:docs && pnpm format && pnpm lint:fix",
