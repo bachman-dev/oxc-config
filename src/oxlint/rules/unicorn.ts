@@ -346,9 +346,6 @@ const unicorn: OxlintRuleGroup = {
         },
       ],
     },
-    "unicorn/max-nested-calls": {
-      settings: ["error", { max: 5 }],
-    },
     "unicorn/no-array-method-this-argument": {
       settings: "error",
     },
