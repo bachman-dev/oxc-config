@@ -36,7 +36,7 @@ const unicorn: OxlintRuleGroup = {
       settings: "error",
     },
     "unicorn/no-instanceof-builtins": {
-      settings: ["error", { exclude: [], include: [], strategy: "strict", useErrorIsError: true }],
+      settings: ["error", { exclude: [], include: [], strategy: "loose", useErrorIsError: true }],
       admonishments: [
         {
           type: "tip",
