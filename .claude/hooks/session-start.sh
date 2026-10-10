@@ -6,7 +6,7 @@
 # the rest of the session, then installs dependencies and builds the package.
 #
 # Works with or without the cloud environment's setup script: if mise isn't
-# already installed, it's bootstrapped from its GitHub release.
+# already installed, it's bootstrapped with the official installer.
 set -euo pipefail
 
 if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
@@ -21,31 +21,17 @@ mise_config="${MISE_CONFIG_DIR:-$HOME/.config/mise}/config.toml"
 export PATH="$mise_shims_dir:$mise_bin_dir:$PATH"
 
 if ! command -v mise >/dev/null 2>&1; then
-  case "$(uname -m)" in
-    x86_64) arch=x64 ;;
-    aarch64 | arm64) arch=arm64 ;;
-    *) echo "Unsupported architecture: $(uname -m)" >&2 && exit 1 ;;
-  esac
-  tmp="$(mktemp -d)"
-  trap 'rm -rf "$tmp"' EXIT
-  # mise.run and mise.jdx.dev aren't on the cloud network allowlist, but the
-  # npm registry and GitHub release downloads are. npm runs outside the repo
-  # so it doesn't trip over this package's devEngines.
-  version="${MISE_INSTALL_VERSION:-$(cd "$tmp" && npm view @jdxcode/mise version)}"
-  asset="mise-v${version}-linux-${arch}"
-  curl -fsSL --retry 3 -o "$tmp/$asset" "https://github.com/jdx/mise/releases/download/v${version}/${asset}"
-  curl -fsSL --retry 3 -o "$tmp/SHASUMS256.txt" "https://github.com/jdx/mise/releases/download/v${version}/SHASUMS256.txt"
-  (cd "$tmp" && grep -E " \./${asset}\$" SHASUMS256.txt | sha256sum -c --quiet -) >&2
-  install -D -m 755 "$tmp/$asset" "$mise_bin_dir/mise"
+  # Needs mise.run on the environment's network allowlist.
+  curl -fsSL --retry 3 https://mise.run | MISE_INSTALL_PATH="$mise_bin_dir/mise" sh >&2
 fi
 
 if [ ! -f "$mise_config" ]; then
   mkdir -p "$(dirname "$mise_config")"
-  # The default pnpm backend (aqua) and the mise versions host both call
-  # hosts the cloud network blocks, so install pnpm from npm instead.
+  # The default pnpm backend (aqua) verifies GitHub artifact attestations
+  # through the GitHub API, which the cloud GitHub proxy only allows for the
+  # session's own repos, so install pnpm from npm instead.
   cat >"$mise_config" <<'EOF'
 [settings]
-use_versions_host = false
 npm.package_manager = "npm"
 
 [tool_alias]
