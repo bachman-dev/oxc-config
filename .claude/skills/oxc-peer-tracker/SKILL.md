@@ -16,7 +16,7 @@ This skill also runs as a scheduled Claude Code Routine in a cloud session, with
 - Don't stop to ask questions. Where a step would need a decision, take the conservative option (for example, leave the issue open, or keep an existing item as it is) and mention it in the final summary.
 - The only output is the issue body. Don't edit files in the repository, commit, push or open a pull request. `pnpm build` writes to `dist`, which is ignored.
 - Use the GitHub MCP tools for issues in `bachman-dev/oxc-config`. They can't read `oxc-project/oxc` because it isn't in the session's repository scope, and `gh` may not be signed in. Read oxc releases and source as steps 3 and 4 describe.
-- With the default network policy, `registry.npmjs.org`, `raw.githubusercontent.com` and `git` access to `github.com` work, and WebFetch can read `github.com` pages. `oxc.rs` is blocked, so use the source fallback in step 4.
+- The skill needs `registry.npmjs.org`, `raw.githubusercontent.com`, `git` access to `github.com` and WebFetch access to `github.com` pages, all of which the default network policy allows. `oxc.rs` isn't on the default list. This repository's environment allows it, but if it's blocked, use the source fallback in step 4.
 - If a source can't be reached, carry on with the others and name the gap in the issue's baseline line and in the final summary. Don't fill it in from memory.
 
 ## 1. Find the tracking issue
