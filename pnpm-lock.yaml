@@ -170,7 +170,7 @@ importers:
         specifier: 24.19.1
         version: 24.19.1
       node:
-        specifier: runtime:^24.21.0
+        specifier: runtime:v24.21.0
         version: runtime:24.21.0
       oxfmt:
         specifier: 0.72.0
