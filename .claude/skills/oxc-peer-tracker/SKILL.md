@@ -13,6 +13,7 @@ The issue always compares the **current `peerDependencies` floor** (the lowest v
 
 This skill also runs as a scheduled Claude Code Routine in a cloud session, with nobody watching. In that case:
 
+- The session may start on a `claude/…` branch instead of `main`. That's fine if `git diff origin/main` is empty; otherwise run `git checkout --detach origin/main` first.
 - Don't stop to ask questions. Where a step would need a decision, take the conservative option (for example, leave the issue open, or keep an existing item as it is) and mention it in the final summary.
 - The only output is the issue body. Don't edit files in the repository, commit, push or open a pull request. `pnpm build` writes to `dist`, which is ignored.
 - Use the GitHub MCP tools for issues in `bachman-dev/oxc-config`. They can't read `oxc-project/oxc` because it isn't in the session's repository scope, and `gh` may not be signed in. Read oxc releases and source as steps 3 and 4 describe.
@@ -21,7 +22,7 @@ This skill also runs as a scheduled Claude Code Routine in a cloud session, with
 
 ## 1. Find the tracking issue
 
-Search the open issues in `bachman-dev/oxc-config` for one whose body contains the marker `<!-- oxc-peer-tracker -->`. If none has it, fall back to the title "Track oxlint/oxfmt changes between peerDependencies and devDependencies". Read the full current body, since checked boxes and human notes must survive the refresh (see step 5). If no issue exists, create one with that title in step 7.
+List the open issues in `bachman-dev/oxc-config` (GitHub MCP `list_issues` with `state: "OPEN"`) and pick the one whose body contains the marker `<!-- oxc-peer-tracker -->`. Don't use issue search for this, because GitHub search doesn't index HTML comments. If none has it, fall back to the title "Track oxlint/oxfmt changes between peerDependencies and devDependencies". Read the full current body, since checked boxes and human notes must survive the refresh (see step 5). If no issue exists, create one with that title in step 7.
 
 If the issue's version table already matches the `peerDependencies` ranges and `devDependencies` versions in `package.json` for both tools, the release range hasn't changed, so the items can't have either. Skip steps 3 and 4. Run step 2 and the baseline commands from step 4, then update only "Last updated" and the baseline line. Leave every item as it is.
 
@@ -30,10 +31,10 @@ If the issue's version table already matches the `peerDependencies` ranges and `
 ```sh
 pnpm install --frozen-lockfile
 pnpm build
-node ./scripts/oxc-version-diff.ts > /tmp/oxc-version-diff.md
+node ./scripts/oxc-version-diff.ts > "${TMPDIR:-/tmp}/oxc-version-diff.md"
 ```
 
-The script reads both versions from `package.json` and installs the peer-floor oxlint and oxfmt into a temporary directory. It prints a Markdown report with these sections:
+If the session has a scratchpad directory, write the report there instead. The script reads both versions from `package.json` and installs the peer-floor oxlint and oxfmt into a temporary directory. It prints a Markdown report with these sections:
 
 - **oxlint rule catalog changes**: added or removed rules, and changes to category, fix type (for example `fixable_fix` → `fixable_suggestion`), type-awareness and on-by-default status. Release notes often omit fix-type changes, so this section is the only reliable source for them.
 - **oxlint / oxfmt configuration schema changes**: new or changed rule options and new or changed format settings. If the oxfmt section says "No changes", there are no new format settings.
@@ -58,7 +59,7 @@ The changelogs are **not** complete. Some fixes appear only in the GitHub releas
 - If a tag 404s, try the other form, or find the tag on `https://github.com/oxc-project/oxc/releases`.
 - To skip the guessing, list the real tags first: `git ls-remote --tags https://github.com/oxc-project/oxc | grep -E 'apps_v|oxlint_v|oxfmt_v'`.
 
-Fetch each page with WebFetch and ask for the notes verbatim, including commit hashes and PR numbers. Any rule that appears in the release notes but not in the script's status section gets a re-run of the script with that rule as an argument.
+Fetch each page with WebFetch. WebFetch summarizes pages, so asking for the notes verbatim gets a condensed summary that drops entries. Ask for one line per entry instead, for example: "List every entry in the release notes body, one per line, as `<section> | <scope> | <entry text> | <PR number(s)> | <commit hash>`. Include every entry from every section, and don't skip or merge entries. At the end, give the total number of entries." Cite only PR numbers that appear in that list or in the script's changelog section. Any rule that appears in the release notes but not in the script's status section gets a re-run of the script with that rule as an argument.
 
 ## 4. Look closer where it matters
 
