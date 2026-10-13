@@ -28,6 +28,14 @@ jobs:
         run: pnpm typecheck
       - name: Build Docs
         run: pnpm build:docs
+      - name: Check for Uncommitted Changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Generated files are out of date; run \`pnpm build:docs\` and commit the changes."
+            git status --short
+            git --no-pager diff
+            exit 1
+          fi
       - name: Check Formatting
         run: pnpm format:check
       - name: Lint Code
