@@ -3,7 +3,7 @@ import type { OxfmtConfigMetaData } from "./types.ts";
 const settings: OxfmtConfigMetaData = {
   arrowParens: {
     setting: "always",
-    explanation: "Promotes consistent arrow function style",
+    explanation: "PPromotes consistent arrow function style",
   },
   bracketSameLine: {
     setting: false,
