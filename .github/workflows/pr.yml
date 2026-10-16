@@ -22,6 +22,8 @@ jobs:
         with:
           cache: true
           require-lockfile: true
+      - name: Run Tests
+        run: pnpm test
       - name: Build Package
         run: pnpm build
       - name: Check Types
