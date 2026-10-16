@@ -17,6 +17,30 @@ Here is a rundown of each Oxfmt setting that we enforce to provide a consistent 
 
 Promotes consistent arrow function style
 
+## [associations](https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html#associations)
+
+### Setting
+
+```json
+[]
+```
+
+### Explanation
+
+Generally set on a per-project basis
+
+## [astro](https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html#astro)
+
+### Setting
+
+```json
+false
+```
+
+### Explanation
+
+Generally set on a per-project basis
+
 ## [bracketSameLine](https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html#bracketSameLine)
 
 ### Setting

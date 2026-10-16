@@ -5,6 +5,14 @@ const settings: OxfmtConfigMetaData = {
     setting: "always",
     explanation: "Promotes consistent arrow function style",
   },
+  associations: {
+    setting: [],
+    explanation: "Generally set on a per-project basis",
+  },
+  astro: {
+    setting: false,
+    explanation: "Generally set on a per-project basis",
+  },
   bracketSameLine: {
     setting: false,
     explanation: "Makes for clean-looking HTML(esque) tags",
