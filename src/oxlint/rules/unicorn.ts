@@ -282,7 +282,7 @@ const unicorn: OxlintRuleGroup = {
       settings: "error",
     },
     "unicorn/prefer-query-selector": {
-      settings: "error",
+      settings: ["error", { allowWithVariables: false }],
     },
     "unicorn/prefer-regexp-test": {
       settings: "error",

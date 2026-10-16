@@ -2033,6 +2033,12 @@ These settings apply only to test files when `vitest` is set to `true` (default)
 
 #### [🛑 unicorn/prefer-query-selector](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-query-selector)
 
+##### Settings
+
+```json
+{ "allowWithVariables": false }
+```
+
 #### [🛑 unicorn/prefer-regexp-test](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-regexp-test)
 
 #### [🛑 unicorn/prefer-single-call](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-single-call)
