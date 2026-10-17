@@ -1760,6 +1760,14 @@ No rules were set for this group's category.
 { "allowSingleElementEquality": "never" }
 ```
 
+#### [🛑 typescript/unified-signatures](https://oxc.rs/docs/guide/usage/linter/rules/typescript/unified-signatures)
+
+##### Settings
+
+```json
+{ "ignoreDifferentlyNamedParameters": false, "ignoreOverloadsWithDifferentJSDoc": false }
+```
+
 ### Nursery
 
 #### [⚠️ typescript/no-unnecessary-condition](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-condition)
