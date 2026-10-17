@@ -37,6 +37,9 @@ const typescript: OxlintRuleGroup = {
         { allowConstructorOnly: false, allowEmpty: false, allowStaticOnly: false, allowWithDecorator: false },
       ],
     },
+    "typescript/no-generated-empty-object-type": {
+      settings: "error",
+    },
     "typescript/no-unnecessary-boolean-literal-compare": {
       settings: ["error", { allowComparingNullableBooleansToFalse: true, allowComparingNullableBooleansToTrue: true }],
     },
