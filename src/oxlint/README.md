@@ -1308,6 +1308,8 @@ These settings apply to all lintable files except test files when `vitest` is se
 { "allowConstructorOnly": false, "allowEmpty": false, "allowStaticOnly": false, "allowWithDecorator": false }
 ```
 
+#### [🛑 typescript/no-generated-empty-object-type](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-generated-empty-object-type)
+
 #### [🛑 typescript/no-unnecessary-boolean-literal-compare](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-boolean-literal-compare)
 
 ##### Settings
