@@ -1,11 +1,4 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>bachman-dev/renovate-config:jslib", "github>bachman-dev/renovate-config:oxlint-tsgolint"],
-  "packageRules": [
-    {
-      "description": "Update oxc tooling as soon as releases pass minimumReleaseAge instead of waiting for the monthly schedule",
-      "matchPackageNames": ["oxfmt", "oxlint", "oxlint-tsgolint"],
-      "schedule": ["* * * * *"]
-    }
-  ]
+  "extends": ["github>bachman-dev/renovate-config:jslib", "github>bachman-dev/renovate-config:oxlint-tsgolint"]
 }

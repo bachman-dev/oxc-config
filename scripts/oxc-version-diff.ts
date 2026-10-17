@@ -7,8 +7,10 @@ import { parseArgs } from "node:util";
 
 import bachmanDevConfig from "../src/oxlint/index.ts";
 
-// Reports what changed in oxlint and oxfmt between the floor of our peerDependencies ranges and the versions in our
-// devDependencies, as raw material for the peer-bump tracking issue (see .claude/skills/oxc-peer-tracker/SKILL.md).
+// Reports what changed in oxlint and oxfmt between the floor of our peerDependencies ranges and the latest releases
+// tagged in oxc-project/oxc, as raw material for the peer-bump tracking issue (see
+// .claude/skills/oxc-peer-tracker/SKILL.md). Using the latest tags rather than our devDependencies as the upper bound
+// shows what's coming before Renovate opens a pull request for it.
 //
 // Usage: node ./scripts/oxc-version-diff.ts [rule ...]
 //
@@ -29,6 +31,18 @@ interface Versions {
   peerFloor: string;
   peerRange: string;
   dev: string;
+  latest: string;
+}
+
+interface Release {
+  tag: string;
+  version: string;
+}
+
+interface ToolReleases {
+  latest: string;
+  notes: string[];
+  releases: Release[];
 }
 
 type JsonRecord = Record<string, unknown>;
@@ -39,7 +53,16 @@ type Tool = (typeof TOOLS)[number];
 
 const CATALOG_FIELDS = ["category", "fix", "type_aware", "default"] as const satisfies (keyof CatalogEntry)[];
 
+const OXC_REPOSITORY_URL = "https://github.com/oxc-project/oxc";
+
 const CHANGELOG_BASE_URL = "https://raw.githubusercontent.com/oxc-project/oxc/main/";
+
+const NPM_REGISTRY_URL = "https://registry.npmjs.org/";
+
+// Every release gets an `oxlint_v<version>` or `oxfmt_v<version>` tag. When both tools shipped from the same commit,
+// that commit is also tagged `apps_v<oxlint version>`, and the GitHub release lives on the `apps_v` tag.
+const RELEASE_TAG =
+  /^(?<commit>[0-9a-f]+)\trefs\/tags\/(?<prefix>apps|oxlint|oxfmt)_v(?<version>\d+\.\d+\.\d+)(?:\^\{\})?$/v;
 
 // Changelogs whose version headings follow each tool's own version numbers
 const CHANGELOGS: Record<Tool, string[]> = {
@@ -108,30 +131,136 @@ function compareVersions(first: string, second: string): number {
 }
 
 function isInRange(version: string, versions: Versions): boolean {
-  return compareVersions(version, versions.peerFloor) > 0 && compareVersions(version, versions.dev) <= 0;
+  return compareVersions(version, versions.peerFloor) > 0 && compareVersions(version, versions.latest) <= 0;
 }
 
-function readToolVersions(tool: Tool, peerDependencies: JsonRecord, devDependencies: JsonRecord): Versions {
+function readTaggedReleases(): Record<Tool, Release[]> {
+  const listing = execFileSync("git", ["ls-remote", "--tags", OXC_REPOSITORY_URL], {
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  // An annotated tag is listed twice, and the second (peeled `^{}`) line names the commit it points at
+  const commits = new Map<string, string>();
+  for (const line of listing.split("\n")) {
+    const { commit, prefix, version } = RELEASE_TAG.exec(line)?.groups ?? {};
+    if (typeof commit === "string" && typeof prefix === "string" && typeof version === "string") {
+      commits.set(`${prefix}_v${version}`, commit);
+    }
+  }
+  const appsTags = new Map<string, string>();
+  for (const [tag, commit] of commits) {
+    if (tag.startsWith("apps_v")) {
+      appsTags.set(commit, tag);
+    }
+  }
+  const releases: Record<Tool, Release[]> = { oxlint: [], oxfmt: [] };
+  for (const [tag, commit] of commits) {
+    const tool = TOOLS.find((name) => tag.startsWith(`${name}_v`));
+    if (typeof tool !== "undefined") {
+      releases[tool].push({ tag: appsTags.get(commit) ?? tag, version: tag.slice(`${tool}_v`.length) });
+    }
+  }
+  for (const tool of TOOLS) {
+    releases[tool].sort((first, second) => compareVersions(first.version, second.version));
+  }
+  return releases;
+}
+
+async function readPublishedVersions(tool: Tool): Promise<{ latest: string; versions: Set<string> }> {
+  // The abbreviated packument is enough to list the published versions
+  const response = await fetch(`${NPM_REGISTRY_URL}${tool}`, {
+    headers: { accept: "application/vnd.npm.install-v1+json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Could not fetch ${tool} from the npm registry (HTTP ${response.status})`);
+  }
+  const packument: unknown = await response.json();
+  const { latest } = readRecord(packument, "dist-tags");
+  if (typeof latest !== "string") {
+    throw new TypeError(`Expected ${tool} to have a latest dist-tag on npm`);
+  }
+  return { latest, versions: new Set(Object.keys(readRecord(packument, "versions"))) };
+}
+
+// The upper bound is the newest version tagged in oxc-project/oxc that's also on npm, since a tag can land shortly
+// before the package is published
+async function readLatestRelease(tool: Tool, tagged: Release[] | undefined): Promise<ToolReleases> {
+  const { latest, versions } = await readPublishedVersions(tool);
+  if (typeof tagged === "undefined") {
+    return {
+      latest,
+      notes: [
+        `Could not list the release tags in ${OXC_REPOSITORY_URL}, so the upper bound for ${tool} is its \`latest\` dist-tag on npm.`,
+      ],
+      releases: [],
+    };
+  }
+  const newest = tagged.findLast((release) => versions.has(release.version));
+  if (typeof newest === "undefined") {
+    throw new TypeError(`Expected at least one ${tool} release tag to be published on npm`);
+  }
+  const unpublished = tagged
+    .filter((release) => compareVersions(release.version, newest.version) > 0)
+    .map((release) => release.version);
+  return {
+    latest: newest.version,
+    notes:
+      unpublished.length > 0
+        ? [`${tool} ${unpublished.join(", ")} is tagged but not on npm yet, so it's left out.`]
+        : [],
+    releases: tagged,
+  };
+}
+
+async function readLatestReleases(): Promise<Record<Tool, ToolReleases>> {
+  let tagged: Record<Tool, Release[]> | undefined;
+  try {
+    tagged = readTaggedReleases();
+  } catch (error) {
+    process.stderr.write(`${isRecord(error) && typeof error.message === "string" ? error.message : String(error)}\n`);
+  }
+  const [oxlint, oxfmt] = await Promise.all(TOOLS.map(async (tool) => await readLatestRelease(tool, tagged?.[tool])));
+  if (typeof oxlint === "undefined" || typeof oxfmt === "undefined") {
+    throw new TypeError("Expected a latest release for both oxlint and oxfmt");
+  }
+  return { oxlint, oxfmt };
+}
+
+function readToolVersions(
+  tool: Tool,
+  peerDependencies: JsonRecord,
+  devDependencies: JsonRecord,
+  latest: string,
+): Versions {
   const peerRange = peerDependencies[tool];
   const dev = devDependencies[tool];
   if (typeof peerRange !== "string" || typeof dev !== "string") {
     throw new TypeError(`Expected ${tool} in both peerDependencies and devDependencies`);
   }
   const [major, minor, patch] = parseVersion(peerRange);
-  return { peerFloor: `${major}.${minor}.${patch}`, peerRange, dev };
+  return { peerFloor: `${major}.${minor}.${patch}`, peerRange, dev, latest };
 }
 
-async function readVersions(): Promise<Record<Tool, Versions>> {
+async function readVersions(latestReleases: Record<Tool, ToolReleases>): Promise<Record<Tool, Versions>> {
   const packageJson: unknown = JSON.parse(await fs.readFile(path.join(PROJECT_DIRECTORY, "package.json"), "utf8"));
   const peerDependencies = readRecord(packageJson, "peerDependencies");
   const devDependencies = readRecord(packageJson, "devDependencies");
   return {
-    oxlint: readToolVersions("oxlint", peerDependencies, devDependencies),
-    oxfmt: readToolVersions("oxfmt", peerDependencies, devDependencies),
+    oxlint: readToolVersions("oxlint", peerDependencies, devDependencies, latestReleases.oxlint.latest),
+    oxfmt: readToolVersions("oxfmt", peerDependencies, devDependencies, latestReleases.oxfmt.latest),
   };
 }
 
-function installPeerFloor(directory: string, versions: Record<Tool, Versions>): void {
+function describeReleases(tool: Tool, versions: Versions, releases: Release[]): string[] {
+  return releases
+    .filter((release) => isInRange(release.version, versions))
+    .map((release) => {
+      const pending = compareVersions(release.version, versions.dev) > 0 ? " (not in devDependencies yet)" : "";
+      return `- ${tool} ${release.version}: [\`${release.tag}\`](${OXC_REPOSITORY_URL}/releases/tag/${release.tag})${pending}`;
+    });
+}
+
+function installVersions(directory: string, versions: Record<Tool, Versions>, bound: "latest" | "peerFloor"): void {
   execFileSync(
     "npm",
     [
@@ -142,7 +271,7 @@ function installPeerFloor(directory: string, versions: Record<Tool, Versions>): 
       "--no-audit",
       "--no-fund",
       "--silent",
-      ...TOOLS.map((tool) => `${tool}@${versions[tool].peerFloor}`),
+      ...TOOLS.map((tool) => `${tool}@${versions[tool][bound]}`),
     ],
     { cwd: directory, stdio: "inherit", shell: process.platform === "win32" },
   );
@@ -365,20 +494,27 @@ async function checkFormatting(oxfmtDirectory: string): Promise<string> {
   }
 }
 
-const versions = await readVersions();
+const latestReleases = await readLatestReleases();
+const versions = await readVersions(latestReleases);
 const workDirectory = await fs.mkdtemp(path.join(tmpdir(), "oxc-version-diff-"));
 
 try {
-  await fs.writeFile(path.join(workDirectory, "package.json"), '{ "private": true }\n', "utf8");
   await fs.writeFile(path.join(workDirectory, "empty.json"), "{}\n", "utf8");
-  installPeerFloor(workDirectory, versions);
+  await Promise.all(
+    (["peerFloor", "latest"] as const).map(async (bound) => {
+      const directory = path.join(workDirectory, bound);
+      await fs.mkdir(directory);
+      await fs.writeFile(path.join(directory, "package.json"), '{ "private": true }\n', "utf8");
+      installVersions(directory, versions, bound);
+    }),
+  );
 
-  const floorDirectory = (tool: Tool): string => path.join(workDirectory, "node_modules", tool);
-  const devDirectory = (tool: Tool): string => path.join(PROJECT_DIRECTORY, "node_modules", tool);
+  const floorDirectory = (tool: Tool): string => path.join(workDirectory, "peerFloor", "node_modules", tool);
+  const latestDirectory = (tool: Tool): string => path.join(workDirectory, "latest", "node_modules", tool);
 
   const floorCatalog = readCatalog(floorDirectory("oxlint"), workDirectory);
-  const devCatalog = readCatalog(devDirectory("oxlint"), workDirectory);
-  const catalogDiff = diffCatalogs(floorCatalog, devCatalog);
+  const latestCatalog = readCatalog(latestDirectory("oxlint"), workDirectory);
+  const catalogDiff = diffCatalogs(floorCatalog, latestCatalog);
 
   const changelogFiles = TOOLS.flatMap((tool) =>
     CHANGELOGS[tool].map((file) => {
@@ -392,7 +528,7 @@ try {
   );
   const schemaDiffs = await Promise.all(
     TOOLS.map(async (tool) =>
-      diffSchemas(await readSchema(floorDirectory(tool)), await readSchema(devDirectory(tool))),
+      diffSchemas(await readSchema(floorDirectory(tool)), await readSchema(latestDirectory(tool))),
     ),
   );
 
@@ -402,11 +538,19 @@ try {
     ...parseArgs({ allowPositionals: true }).positionals,
   ]);
 
-  let report = "# oxlint/oxfmt peer-floor → devDependency diff\n\n";
-  report += "| Package | peerDependencies | Peer floor | devDependencies |\n| --- | --- | --- | --- |\n";
+  let report = "# oxlint/oxfmt peer-floor → latest release diff\n\n";
+  report +=
+    "| Package | peerDependencies | Peer floor | devDependencies | Latest release |\n| --- | --- | --- | --- | --- |\n";
   for (const tool of TOOLS) {
-    report += `| ${tool} | \`${versions[tool].peerRange}\` | ${versions[tool].peerFloor} | ${versions[tool].dev} |\n`;
+    report += `| ${tool} | \`${versions[tool].peerRange}\` | ${versions[tool].peerFloor} | ${versions[tool].dev} | ${versions[tool].latest} |\n`;
   }
+  const notes = TOOLS.flatMap((tool) => latestReleases[tool].notes);
+  if (notes.length > 0) {
+    report += `\n${notes.map((note) => `- ${note}`).join("\n")}\n`;
+  }
+  report += "\n## Releases in range\n\n";
+  const releaseLines = TOOLS.flatMap((tool) => describeReleases(tool, versions[tool], latestReleases[tool].releases));
+  report += releaseLines.length > 0 ? `${releaseLines.join("\n")}\n` : "None.\n";
   report += "\n## oxlint rule catalog changes\n\n";
   report += catalogDiff.lines.length > 0 ? `${catalogDiff.lines.join("\n")}\n` : "No changes.\n";
   for (const [index, tool] of TOOLS.entries()) {
@@ -417,7 +561,7 @@ try {
   report += "\n## Status of affected rules in our config\n\n";
   report += `${[...statusRules]
     .toSorted()
-    .map((rule) => describeRuleStatus(rule, devCatalog))
+    .map((rule) => describeRuleStatus(rule, latestCatalog))
     .join("\n")}\n`;
   report += "\n## Formatting check with the peer-floor oxfmt\n\n";
   report += await checkFormatting(floorDirectory("oxfmt"));
