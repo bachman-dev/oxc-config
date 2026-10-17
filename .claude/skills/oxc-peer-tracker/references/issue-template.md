@@ -1,6 +1,6 @@
 # Tracking issue template
 
-**Title:** `Track oxlint/oxfmt changes between peerDependencies and devDependencies`
+**Title:** `Track oxlint/oxfmt changes between peerDependencies and the latest releases`
 
 Copy the body below and fill in the `{placeholders}`. Keep every heading, in this order, even when a category is empty. For an empty category write `- [x] **None.** {how you know, for example "the rule catalog diff shows no added rules"}`.
 
@@ -19,23 +19,23 @@ Category definitions:
 | Formatting behavior changes               | Split by subject (Markdown, JSDoc, comments and JS/TS layout, CSS/YAML/GraphQL and so on); relate each item to our settings in `src/oxfmt/settings.ts` |
 | Bundled Prettier and CLI behavior         | Prettier version bumps, config discovery and CLI changes                                                                                               |
 
-Release link per version: the combined `apps_v<oxlint version>` tag when oxlint and oxfmt shipped together, otherwise `oxlint_v<version>` / `oxfmt_v<version>`.
+Release link per version: use the tags and links from the script's "Releases in range" section. They're the combined `apps_v<oxlint version>` tag when oxlint and oxfmt shipped together, otherwise `oxlint_v<version>` / `oxfmt_v<version>`. Mark each release that's newer than our `devDependencies` with "(not in devDependencies yet)".
 
 ```markdown
 <!-- oxc-peer-tracker -->
 
-This issue tracks the oxlint and oxfmt changes between the minimum versions in our `peerDependencies` and the versions in our `devDependencies`. We work through these items before raising the peer ranges. Whenever this issue is refreshed, it compares the current `peerDependencies` floor against the current `devDependencies`.
+This issue tracks the oxlint and oxfmt changes between the minimum versions in our `peerDependencies` and the latest oxlint and oxfmt releases tagged in `oxc-project/oxc`. We work through these items before raising the peer ranges. Because it covers releases that Renovate hasn't brought into our `devDependencies` yet, it also shows upcoming changes that would fail CI. Whenever this issue is refreshed, it compares the current `peerDependencies` floor against the latest releases.
 
-To refresh it, ask Claude to use the `oxc-peer-tracker` skill (`.claude/skills/oxc-peer-tracker/SKILL.md`). Do this whenever the oxlint or oxfmt dev or peer versions change, and before raising the peer ranges.
+To refresh it, ask Claude to use the `oxc-peer-tracker` skill (`.claude/skills/oxc-peer-tracker/SKILL.md`). A scheduled Claude Code Routine also refreshes it weekly. Refresh it by hand when a new oxlint or oxfmt release comes out, when the peer ranges change, and before raising the peer ranges.
 
 **Last updated:** {YYYY-MM-DD}
 
-| Package | `peerDependencies` | `devDependencies` | Releases covered |
-| ------- | ------------------ | ----------------- | ---------------- |
-| oxlint  | `{range}`          | `{version}`       | {release links}  |
-| oxfmt   | `{range}`          | `{version}`       | {release links}  |
+| Package | `peerDependencies` | `devDependencies` | Latest release | Releases covered |
+| ------- | ------------------ | ----------------- | -------------- | ---------------- |
+| oxlint  | `{range}`          | `{version}`       | `{version}`    | {release links}  |
+| oxfmt   | `{range}`          | `{version}`       | `{version}`    | {release links}  |
 
-Sources: the GitHub release notes above, plus the `apps/oxlint`, `apps/oxfmt`, `crates/oxc_linter` and `crates/oxc_formatter*` changelogs in `oxc-project/oxc`, and `scripts/oxc-version-diff.ts`. The script compares the rule catalog (`oxlint --rules`) and both packages' `configuration_schema.json` between the peer-floor and installed versions.
+Sources: the GitHub release notes above, plus the `apps/oxlint`, `apps/oxfmt`, `crates/oxc_linter` and `crates/oxc_formatter*` changelogs in `oxc-project/oxc`, and `scripts/oxc-version-diff.ts`. The script compares the rule catalog (`oxlint --rules`) and both packages' `configuration_schema.json` between the peer-floor and latest versions.
 
 Items are marked **(we enable)** when the rule is turned on by our config, either explicitly in `src/oxlint/rules/*.ts` or through the `correctness` category.
 
@@ -79,11 +79,13 @@ Items are marked **(we enable)** when the rule is turned on by our config, eithe
 ## Before bumping the peer ranges
 
 - [ ] Address or consciously skip every item above.
-- [ ] Bump `peerDependencies` to `"oxlint": "^{dev version}"` and `"oxfmt": ">={dev version} <1"`. Use the current devDependency versions if they've moved on.
+- [ ] Bump `peerDependencies` to `"oxlint": "^{dev version}"` and `"oxfmt": ">={dev version} <1"`, using the current `devDependencies` versions. The peer floor can't go past what CI runs, so items for releases newer than our `devDependencies` stay in this issue until Renovate brings them in.
 - [ ] Run `pnpm all` and check that `src/oxfmt/README.md` / `src/oxlint/README.md` regenerate cleanly.
 - [ ] Bump the package version and note the new minimum versions in the release notes.
 
-**Baseline as of this update:** {results of `pnpm test`, `pnpm lint`, `pnpm format:check`, and the script's peer-floor oxfmt check}
+**Baseline as of this update:** {results of `pnpm test`, `pnpm lint`, `pnpm format:check` with our `devDependencies`, and the script's peer-floor oxfmt check}
+
+**CI preview with the latest releases:** {results of `pnpm test`, `pnpm typecheck`, `pnpm build:docs`, `pnpm format:check` and `pnpm lint` with the latest oxlint and oxfmt, or "Same as the baseline: our `devDependencies` are the latest releases."}
 
 ---
 
