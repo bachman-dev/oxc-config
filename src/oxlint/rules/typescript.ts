@@ -366,6 +366,9 @@ const typescript: OxlintRuleGroup = {
     "typescript/prefer-string-starts-ends-with": {
       settings: ["error", { allowSingleElementEquality: "never" }],
     },
+    "typescript/unified-signatures": {
+      settings: ["error", { ignoreDifferentlyNamedParameters: false, ignoreOverloadsWithDifferentJSDoc: false }],
+    },
   },
   nursery: {
     "typescript/no-unnecessary-condition": {
