@@ -39,7 +39,7 @@ false
 
 ### Explanation
 
-Generally set on a per-project basis
+Only Astro projects need this, so it's turned on by including `astro` in the `uiFrameworks` option (see UI Frameworks below)
 
 ## [bracketSameLine](https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html#bracketSameLine)
 
@@ -424,3 +424,26 @@ false
 ### Explanation
 
 Keeping consistency with other HTML-esque attributes
+
+# UI Frameworks
+
+These settings are only applied when the framework is listed in the `uiFrameworks` option, passed as the first parameter to `bachmanDev` (eg `bachmanDev({ uiFrameworks: ["astro"] })`). Anything in the configuration object you pass as the second parameter still takes precedence.
+
+## Astro (`astro`)
+
+> [!IMPORTANT]
+> Oxfmt formats Astro components with `prettier-plugin-astro`, which needs the `@astrojs/compiler-rs` package installed in your project; formatting `.astro` files fails without it.
+
+### [astro](https://oxc.rs/docs/guide/usage/formatter/config-file-reference.html#astro)
+
+#### Setting
+
+```json
+{ "allowShorthand": true, "compressHTML": "jsx", "skipFrontmatter": false }
+```
+
+#### Explanations
+
+- `allowShorthand: true` mirrors the `object-shorthand` oxlint rule, so `{title}` is preferred over `title={title}`
+- `compressHTML: "jsx"` is oxfmt's default; change it if your project changes Astro's own `compressHTML` setting
+- `skipFrontmatter: false` so the frontmatter is formatted like any other TypeScript

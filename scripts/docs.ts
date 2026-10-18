@@ -4,8 +4,10 @@ import path from "node:path";
 
 import * as rules from "../src/oxlint/rules/index.ts";
 import settings from "../src/oxfmt/settings.ts";
+import oxfmtUiFrameworks from "../src/oxfmt/ui-frameworks.ts";
 import bachmanDevConfig from "../src/oxlint/index.ts";
 import type { OxlintRuleMetadata } from "../src/oxlint/types.ts";
+import oxlintUiFrameworks from "../src/oxlint/ui-frameworks.ts";
 import type { Admonishment } from "../src/types.ts";
 
 const heading = {
@@ -357,6 +359,30 @@ for (const [key, value] of Object.entries(settings)) {
   }
 }
 
+readmeMarkdown += header(heading.one, "UI Frameworks");
+readmeMarkdown += paragraph(
+  'These settings are only applied when the framework is listed in the `uiFrameworks` option, passed as the first parameter to `bachmanDev` (eg `bachmanDev({ uiFrameworks: ["astro"] })`). Anything in the configuration object you pass as the second parameter still takes precedence.',
+);
+
+for (const [key, framework] of Object.entries(oxfmtUiFrameworks)) {
+  readmeMarkdown += header(heading.two, `${framework.name} (\`${key}\`)`);
+  if (Array.isArray(framework.admonishments)) {
+    readmeMarkdown += admonish(framework.admonishments);
+  }
+  for (const [settingKey, value] of Object.entries(framework.settings)) {
+    readmeMarkdown += header(heading.three, link(settingKey, getOxfmtSettingUrl(settingKey)));
+    readmeMarkdown += header(heading.four, "Setting");
+    readmeMarkdown += json(value.setting);
+    if (typeof value.explanation === "string") {
+      readmeMarkdown += header(heading.four, "Explanation");
+      readmeMarkdown += paragraph(value.explanation);
+    } else {
+      readmeMarkdown += header(heading.four, "Explanations");
+      readmeMarkdown += unorderedList(value.explanation);
+    }
+  }
+}
+
 await fs.writeFile(oxfmtReadmePath, readmeMarkdown, "utf8");
 
 readmeMarkdown = admonish([autoGenCaution]);
@@ -383,6 +409,29 @@ readmeMarkdown += unorderedList([
   "**Style:** Idiomatic and consistent style rules",
   '**Nursery (optional):** Rules under development that may change (these will only emit a warning until they "graduate" into one of the other categories)',
 ]);
+
+readmeMarkdown += header(heading.two, "UI Frameworks");
+readmeMarkdown += paragraph(
+  'Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: ["astro"] })`) adds an override that sets the environments for that framework\'s files, and turns on any rule overrides for those files, which are listed with each rule below. Any overrides you pass in yourself are applied after these.',
+);
+
+for (const [key, framework] of Object.entries(oxlintUiFrameworks)) {
+  readmeMarkdown += header(heading.three, `${framework.name} (\`${key}\`)`);
+  readmeMarkdown += paragraph(framework.description);
+  if (Array.isArray(framework.admonishments)) {
+    readmeMarkdown += admonish(framework.admonishments);
+  }
+  readmeMarkdown += paragraph(
+    `The override applies to ${framework.files.description}: ${framework.files
+      .globs({})
+      .map((glob) => `\`${glob}\``)
+      .join(", ")}.`,
+  );
+  readmeMarkdown += header(heading.four, "Environments");
+  readmeMarkdown += unorderedList(
+    Object.entries(framework.env).map(([env, value]) => `\`${env}: ${String(value.setting)}\` -- ${value.explanation}`),
+  );
+}
 
 readmeMarkdown += header(heading.two, "Legend");
 readmeMarkdown += unorderedList([

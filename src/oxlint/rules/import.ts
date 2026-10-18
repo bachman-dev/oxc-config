@@ -1,5 +1,5 @@
 import type { OxlintRuleGroup } from "../types.ts";
-import { typeScriptDeclarationFiles } from "../utils.ts";
+import { typeScriptDeclarationFilesAndAstroComponents } from "../utils.ts";
 
 const importRules: OxlintRuleGroup = {
   name: "Import/Export Declaration Rules",
@@ -49,7 +49,7 @@ const importRules: OxlintRuleGroup = {
     "import/unambiguous": {
       settings: "error",
       override: {
-        files: typeScriptDeclarationFiles,
+        files: typeScriptDeclarationFilesAndAstroComponents,
         settings: "off",
       },
     },

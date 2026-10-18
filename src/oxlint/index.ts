@@ -117,3 +117,4 @@ export default function bachmanDevConfig(userOptions?: OxlintConfigOptions, over
 // reachable from the consumer by a bare specifier -- and it errors with TS2883 instead.
 export type { OxlintConfig } from "oxlint";
 export type { OxlintConfigOptions } from "./types.ts";
+export type { UiFramework } from "../types.ts";

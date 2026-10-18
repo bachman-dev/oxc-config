@@ -1,6 +1,8 @@
-import type { DummyRuleMap, OxlintConfig, OxlintOverride } from "oxlint";
+import type { DummyRuleMap, OxlintConfig, OxlintEnv, OxlintOverride } from "oxlint";
 
+import type { UiFramework } from "../types.ts";
 import type { LintPlugin, OverrideGlobSet, OxlintConfigOptions, OxlintRuleGroup, OxlintRuleMetadata } from "./types.ts";
+import uiFrameworks from "./ui-frameworks.ts";
 
 function hasSameGlobs(first?: string[], second?: string[]): boolean {
   if (typeof first === "undefined" || typeof second === "undefined") {
@@ -37,6 +39,26 @@ function mergeRuleGroups(groups: OxlintRuleGroup[]): OxlintRuleMetadata {
   return merged;
 }
 
+function buildUiFrameworkOverrides(config: OxlintConfigOptions): OxlintOverride[] {
+  const builtOverrides: OxlintOverride[] = [];
+  // A Set drops duplicates, so listing a framework twice doesn't add its override twice
+  for (const framework of new Set(config.uiFrameworks)) {
+    const metadata = uiFrameworks[framework];
+    const env: OxlintEnv = {};
+    for (const [name, value] of Object.entries(metadata.env)) {
+      env[name] = value.setting;
+    }
+    builtOverrides.push({ files: metadata.files.globs(config), env });
+  }
+  return builtOverrides;
+}
+
+function usesUiFramework(config: OxlintConfigOptions, framework: UiFramework): boolean {
+  return Array.isArray(config.uiFrameworks) && config.uiFrameworks.includes(framework);
+}
+
+const ASTRO_GLOBS = ["**/*.astro"];
+
 export function buildPlugins(baseRuleGroups: OxlintRuleGroup[], overrides?: OxlintConfig): LintPlugin[] {
   if (typeof overrides === "object" && Array.isArray(overrides.plugins)) {
     return [...baseRuleGroups.map((group) => group.plugin), ...overrides.plugins];
@@ -66,9 +88,10 @@ export function buildOverrides(
   const builtOverrides: OxlintOverride[] = [];
   const mergedRules = mergeRuleGroups(baseRuleGroups);
   for (const [key, value] of Object.entries(mergedRules)) {
-    if (typeof value.override === "object") {
-      // Resolve up front so a glob function is only called once per rule override
-      const files = value.override.files.globs(config);
+    // Resolve up front so a glob function is only called once per rule override
+    const files = value.override?.files.globs(config) ?? [];
+    // A glob set can resolve to nothing, eg when it only covers a UI framework that isn't in use
+    if (typeof value.override === "object" && files.length > 0) {
       const excludeFiles = value.override.excludeFiles?.globs(config);
       let override = builtOverrides.find(
         (candidate) => hasSameGlobs(candidate.files, files) && hasSameGlobs(candidate.excludeFiles, excludeFiles),
@@ -84,6 +107,8 @@ export function buildOverrides(
       override.rules[key] = value.override.settings;
     }
   }
+  // UI framework overrides come before the user's own, so the user can still override them per file
+  builtOverrides.push(...buildUiFrameworkOverrides(config));
   if (typeof overrides === "object" && Array.isArray(overrides.overrides)) {
     builtOverrides.push(...overrides.overrides);
   }
@@ -112,10 +137,22 @@ export const allTypeScriptFilesDefaultCase: OverrideGlobSet = {
   globs: () => ["**/*.{ts,tsx,cts,mts}"],
 };
 
-export const typeScriptDeclarationFiles: OverrideGlobSet = {
+export const typeScriptDeclarationFilesAndAstroComponents: OverrideGlobSet = {
   description:
-    "TypeScript declaration files, as ambient declarations (eg `declare module`) must not contain imports or exports",
-  globs: () => ["**/*.d.{ts,cts,mts}"],
+    "TypeScript declaration files, as ambient declarations (eg `declare module`) must not contain imports or exports, and Astro components when `uiFrameworks` includes `astro`, as Astro always treats their frontmatter and processed `<script>` tags as modules",
+  globs: (config) => ["**/*.d.{ts,cts,mts}", ...(usesUiFramework(config, "astro") ? ASTRO_GLOBS : [])],
+};
+
+export const astroComponentsBundledAsModules: OverrideGlobSet = {
+  description:
+    "Astro components when `uiFrameworks` includes `astro`, as Astro bundles their processed `<script>` tags as modules, so top-level declarations don't leak into the global scope (`<script is:inline>` tags aren't processed, so keep those wrapped in a block or IIFE)",
+  globs: (config) => (usesUiFramework(config, "astro") ? ASTRO_GLOBS : []),
+};
+
+export const astroComponentsPascalCase: OverrideGlobSet = {
+  description:
+    "Astro components when `uiFrameworks` includes `astro`, as components are conventionally named in PascalCase (eg `Layout.astro`), while pages stay in kebab-case since their names become URLs",
+  globs: (config) => (usesUiFramework(config, "astro") ? ASTRO_GLOBS : []),
 };
 
 export const testFiles: OverrideGlobSet = {
