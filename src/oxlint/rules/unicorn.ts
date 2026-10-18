@@ -1,5 +1,5 @@
 import type { OxlintRuleGroup } from "../types.ts";
-import { testFiles } from "../utils.ts";
+import { astroComponentsPascalCase, testFiles } from "../utils.ts";
 
 const unicorn: OxlintRuleGroup = {
   name: "Unicorn Rules",
@@ -345,6 +345,25 @@ const unicorn: OxlintRuleGroup = {
           multipleFileExtensions: true,
         },
       ],
+      override: {
+        files: astroComponentsPascalCase,
+        settings: [
+          "error",
+          {
+            // Oxlint uses `case` over `cases` when both are set, so only `cases` is set here
+            cases: {
+              camelCase: false,
+              kebabCase: true,
+              lowercase: false,
+              pascalCase: true,
+              screamingSnakeCase: false,
+              snakeCase: false,
+            },
+            ignore: [],
+            multipleFileExtensions: true,
+          },
+        ],
+      },
     },
     "unicorn/no-array-method-this-argument": {
       settings: "error",

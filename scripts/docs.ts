@@ -412,7 +412,7 @@ readmeMarkdown += unorderedList([
 
 readmeMarkdown += header(heading.two, "UI Frameworks");
 readmeMarkdown += paragraph(
-  "Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: [\"astro\"] })`) adds an override for that framework's files. Rules from plugins you've turned off are left out of it, and any overrides you pass in yourself are applied after it.",
+  'Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: ["astro"] })`) adds an override that sets the environments for that framework\'s files, and turns on any rule overrides for those files, which are listed with each rule below. Any overrides you pass in yourself are applied after these.',
 );
 
 for (const [key, framework] of Object.entries(oxlintUiFrameworks)) {
@@ -431,12 +431,6 @@ for (const [key, framework] of Object.entries(oxlintUiFrameworks)) {
   readmeMarkdown += unorderedList(
     Object.entries(framework.env).map(([env, value]) => `\`${env}: ${String(value.setting)}\` -- ${value.explanation}`),
   );
-  readmeMarkdown += header(heading.four, "Rules");
-  for (const [ruleName, rule] of Object.entries(framework.rules)) {
-    readmeMarkdown += header(heading.five, link(ruleName, getOxlintRuleUrl(ruleName)));
-    readmeMarkdown += json(rule.settings);
-    readmeMarkdown += paragraph(rule.explanation);
-  }
 }
 
 readmeMarkdown += header(heading.two, "Legend");

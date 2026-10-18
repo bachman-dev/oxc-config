@@ -49,14 +49,11 @@ We've organized the rules in each group into the following oxlint categories:
 
 ## UI Frameworks
 
-Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: ["astro"] })`) adds an override for that framework's files. Rules from plugins you've turned off are left out of it, and any overrides you pass in yourself are applied after it.
+Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: ["astro"] })`) adds an override that sets the environments for that framework's files, and turns on any rule overrides for those files, which are listed with each rule below. Any overrides you pass in yourself are applied after these.
 
 ### Astro (`astro`)
 
-Oxlint lints the frontmatter and `<script>` tags of Astro components out of the box; these settings adjust the config to fit how Astro builds them.
-
-> [!NOTE]
-> `<script>` tags with the `is:inline` directive aren't processed by Astro, so their top-level declarations do become globals; keep those scripts wrapped in a block or IIFE.
+Oxlint lints the frontmatter and `<script>` tags of Astro components out of the box.
 
 The override applies to Astro components: `**/*.astro`.
 
@@ -64,46 +61,6 @@ The override applies to Astro components: `**/*.astro`.
 
 - `astro: true` -- Defines the `Astro` global that's available in component frontmatter
 - `browser: true` -- Defines browser globals such as `document` for the client-side code in `<script>` tags
-
-#### Rules
-
-##### [import/unambiguous](https://oxc.rs/docs/guide/usage/linter/rules/import/unambiguous)
-
-```json
-"off"
-```
-
-Astro always treats frontmatter and processed `<script>` tags as modules, even without any imports or exports
-
-##### [no-implicit-globals](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals)
-
-```json
-"off"
-```
-
-Astro bundles processed `<script>` tags as modules, so their top-level declarations don't leak into the global scope
-
-##### [unicorn/filename-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case)
-
-```json
-[
-  "error",
-  {
-    "cases": {
-      "camelCase": false,
-      "kebabCase": true,
-      "lowercase": false,
-      "pascalCase": true,
-      "screamingSnakeCase": false,
-      "snakeCase": false
-    },
-    "ignore": [],
-    "multipleFileExtensions": true
-  }
-]
-```
-
-Astro components are conventionally named in PascalCase (eg `Layout.astro`), while pages stay in kebab-case since their names become URLs
 
 ## Legend
 
@@ -359,9 +316,11 @@ These settings apply to all lintable files except all TypeScript files, as the `
 
 #### [🛑 no-eq-null](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-eq-null)
 
-#### [🛑 no-implicit-globals](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals)
+#### [🛑📂🔲 no-implicit-globals](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals)
 
 ##### Settings
+
+These settings apply to all lintable files except Astro components when `uiFrameworks` includes `astro`, as Astro bundles their processed `<script>` tags as modules, so top-level declarations don't leak into the global scope (`<script is:inline>` tags aren't processed, so keep those wrapped in a block or IIFE).
 
 ```json
 { "lexicalBindings": true }
@@ -1022,7 +981,7 @@ No rules have had their settings changed apart from the defaults provided by oxl
 
 #### [🛑📂🔲 import/unambiguous](https://oxc.rs/docs/guide/usage/linter/rules/import/unambiguous)
 
-This rule throws a linting error except for TypeScript declaration files, as ambient declarations (eg `declare module`) must not contain imports or exports.
+This rule throws a linting error except for TypeScript declaration files, as ambient declarations (eg `declare module`) must not contain imports or exports, and Astro components when `uiFrameworks` includes `astro`, as Astro always treats their frontmatter and processed `<script>` tags as modules.
 
 ### Perf
 
@@ -2155,9 +2114,11 @@ These settings apply only to test files when `vitest` is set to `true` (default)
 "always"
 ```
 
-#### [🛑 unicorn/filename-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case)
+#### [🛑📂🛑 unicorn/filename-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case)
 
 ##### Settings
+
+These are the default settings applied to most lintable files.
 
 ```json
 {
@@ -2167,6 +2128,23 @@ These settings apply only to test files when `vitest` is set to `true` (default)
     "kebabCase": true,
     "lowercase": false,
     "pascalCase": false,
+    "screamingSnakeCase": false,
+    "snakeCase": false
+  },
+  "ignore": [],
+  "multipleFileExtensions": true
+}
+```
+
+These settings apply only to Astro components when `uiFrameworks` includes `astro`, as components are conventionally named in PascalCase (eg `Layout.astro`), while pages stay in kebab-case since their names become URLs.
+
+```json
+{
+  "cases": {
+    "camelCase": false,
+    "kebabCase": true,
+    "lowercase": false,
+    "pascalCase": true,
     "screamingSnakeCase": false,
     "snakeCase": false
   },

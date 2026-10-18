@@ -9,14 +9,15 @@ import { describe, expect, it, vi } from "vitest";
 
 import bachmanDev from "../src/oxfmt/index.ts";
 import bachmanDevConfig from "../src/oxlint/index.ts";
-import oxlintUiFrameworks from "../src/oxlint/ui-frameworks.ts";
 
 // Most tests here only build a config, but a few run oxlint itself against a component
 vi.setConfig({ testTimeout: 10_000 });
 
 const OXLINT_DIRECTORY = path.dirname(createRequire(import.meta.url).resolve("oxlint/package.json"));
 
-const ASTRO_GLOBS = ["**/*.astro"];
+const ASTRO_GLOB = "**/*.astro";
+
+const ASTRO_GLOBS = [ASTRO_GLOB];
 
 // A component trips every rule the Astro override adjusts: a PascalCase name, the `Astro` and `document` globals,
 // and top-level declarations in a `<script>` tag with no imports or exports
@@ -32,7 +33,8 @@ const { title } = Astro.props;
 </script>
 `;
 
-const ASTRO_RULES = Object.keys(oxlintUiFrameworks.astro.rules);
+// The rules our rule groups set differently for Astro components
+const ASTRO_RULES = ["import/unambiguous", "no-implicit-globals", "unicorn/filename-case"];
 
 interface LintDiagnostic {
   code: string;
@@ -73,45 +75,41 @@ async function lintAstroComponent(config: object): Promise<string[]> {
   }
 }
 
-function isAstroOverride(override: OxlintOverride): boolean {
-  return override.files.join(",") === ASTRO_GLOBS.join(",");
-}
-
 function findAstroOverrides(config: OxlintConfig): OxlintOverride[] {
-  return (config.overrides ?? []).filter((override) => isAstroOverride(override));
+  return (config.overrides ?? []).filter((override) => override.files.includes(ASTRO_GLOB));
 }
 
-function getAstroOverride(config: OxlintConfig): OxlintOverride {
-  const [astroOverride] = findAstroOverrides(config);
-  if (typeof astroOverride === "undefined") {
-    throw new TypeError("Expected the config to have an Astro override");
-  }
-  return astroOverride;
+function findAstroEnvOverrides(config: OxlintConfig): OxlintOverride[] {
+  return findAstroOverrides(config).filter((override) => typeof override.env === "object");
 }
 
 function getAstroRuleNames(config: OxlintConfig): string[] {
-  return Object.keys(getAstroOverride(config).rules ?? {});
+  return findAstroOverrides(config).flatMap((override) => Object.keys(override.rules ?? {}));
 }
 
 // Type-aware linting needs a tsconfig and tsgolint; the Astro override doesn't depend on either
 const NOT_TYPE_AWARE = { options: { typeAware: false, typeCheck: false } };
 
 describe("oxlint uiFrameworks", () => {
-  it("adds no Astro override by default", () => {
+  it("adds no override for Astro components by default", () => {
     expect(findAstroOverrides(bachmanDevConfig())).toStrictEqual([]);
   });
 
-  it("adds the Astro override when astro is listed", () => {
-    const config = bachmanDevConfig({ uiFrameworks: ["astro"] });
-    expect(getAstroOverride(config).env).toStrictEqual({ astro: true, browser: true });
-    expect(getAstroRuleNames(config)).toStrictEqual(ASTRO_RULES);
+  it("sets the Astro environments when astro is listed", () => {
+    expect(findAstroEnvOverrides(bachmanDevConfig({ uiFrameworks: ["astro"] }))).toStrictEqual([
+      { files: ASTRO_GLOBS, env: { astro: true, browser: true } },
+    ]);
   });
 
-  it("adds the Astro override once when astro is listed twice", () => {
-    expect(findAstroOverrides(bachmanDevConfig({ uiFrameworks: ["astro", "astro"] }))).toHaveLength(1);
+  it("turns on the Astro rule overrides when astro is listed", () => {
+    expect(getAstroRuleNames(bachmanDevConfig({ uiFrameworks: ["astro"] })).toSorted()).toStrictEqual(ASTRO_RULES);
   });
 
-  it("leaves out rules from plugins that are turned off", () => {
+  it("sets the Astro environments once when astro is listed twice", () => {
+    expect(findAstroEnvOverrides(bachmanDevConfig({ uiFrameworks: ["astro", "astro"] }))).toHaveLength(1);
+  });
+
+  it("leaves out rule overrides from plugins that are turned off", () => {
     expect(getAstroRuleNames(bachmanDevConfig({ uiFrameworks: ["astro"], unicorm: false }))).not.toContain(
       "unicorn/filename-case",
     );

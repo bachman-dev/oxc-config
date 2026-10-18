@@ -56,11 +56,5 @@ export interface OxlintUiFrameworkMetadata {
   description: string;
   files: OverrideGlobSet;
   env: Record<string, { setting: boolean; explanation: string }>;
-  rules: {
-    [Rule in keyof RemoveIndex<DummyRuleMap>]?: {
-      settings: DummyRuleMap[Rule];
-      explanation: string;
-    };
-  };
   admonishments?: [first: Admonishment, ...rest: Admonishment[]];
 }

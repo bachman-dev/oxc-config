@@ -4,6 +4,7 @@ import {
   allTypeScriptFilesHandledByTypeScript,
   allTypeScriptFilesNoImpliedEval,
   allTypeScriptFilesNoUnreachable,
+  astroComponentsBundledAsModules,
   testFiles,
 } from "../utils.ts";
 
@@ -232,6 +233,10 @@ const eslint: OxlintRuleGroup = {
     },
     "no-implicit-globals": {
       settings: ["error", { lexicalBindings: true }],
+      override: {
+        files: astroComponentsBundledAsModules,
+        settings: "off",
+      },
     },
     "no-param-reassign": {
       settings: [
