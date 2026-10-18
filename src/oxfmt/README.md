@@ -427,7 +427,7 @@ Keeping consistency with other HTML-esque attributes
 
 # UI Frameworks
 
-These settings are only applied when the framework is listed in the `uiFrameworks` option, passed as the second parameter to `bachmanDev` (eg `bachmanDev({}, { uiFrameworks: ["astro"] })`). Anything in your own configuration object still takes precedence.
+These settings are only applied when the framework is listed in the `uiFrameworks` option, passed as the first parameter to `bachmanDev` (eg `bachmanDev({ uiFrameworks: ["astro"] })`). Anything in the configuration object you pass as the second parameter still takes precedence.
 
 ## Astro (`astro`)
 

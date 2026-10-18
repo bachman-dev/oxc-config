@@ -149,7 +149,7 @@ describe("oxfmt uiFrameworks", () => {
   });
 
   it("turns on Astro formatting when astro is listed", () => {
-    expect(bachmanDev(undefined, { uiFrameworks: ["astro"] }).astro).toStrictEqual({
+    expect(bachmanDev({ uiFrameworks: ["astro"] }).astro).toStrictEqual({
       allowShorthand: true,
       compressHTML: "jsx",
       skipFrontmatter: false,
@@ -157,7 +157,7 @@ describe("oxfmt uiFrameworks", () => {
   });
 
   it("lets the user's own astro setting win", () => {
-    expect(bachmanDev({ astro: { skipFrontmatter: true } }, { uiFrameworks: ["astro"] }).astro).toStrictEqual({
+    expect(bachmanDev({ uiFrameworks: ["astro"] }, { astro: { skipFrontmatter: true } }).astro).toStrictEqual({
       skipFrontmatter: true,
     });
   });

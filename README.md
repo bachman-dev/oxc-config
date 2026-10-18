@@ -44,24 +44,24 @@ import { defineConfig } from "oxfmt";
 export default defineConfig(bachmanDev());
 ```
 
-The method accepts an oxfmt configuration object in case you need to override any global settings or add overrides for specific files:
+For a project built with a UI framework, pass the framework's name in the `uiFrameworks` option to turn on its formatting settings. Only `astro` is supported for now; Astro also needs the `@astrojs/compiler-rs` package installed for oxfmt to format `.astro` files.
+
+```ts
+import bachmanDev from "@bachman-dev/oxc-config/oxfmt";
+import { defineConfig } from "oxfmt";
+
+export default defineConfig(bachmanDev({ uiFrameworks: ["astro"] }));
+```
+
+The method accepts an oxfmt configuration object as the second parameter in case you need to override any global settings or add overrides for specific files:
 
 ```ts
 import bachmanDev from "@bachman-dev/oxc-config/oxfmt";
 import { defineConfig } from "oxfmt";
 
 export default defineConfig(
-  bachmanDev({ useTabs: true, overrides: [{ files: ["**/*.md"], options: { proseWrap: "never" } }] }),
+  bachmanDev({}, { useTabs: true, overrides: [{ files: ["**/*.md"], options: { proseWrap: "never" } }] }),
 );
-```
-
-For a project built with a UI framework, pass the framework's name in the `uiFrameworks` option as the second parameter to turn on its formatting settings. Only `astro` is supported for now; Astro also needs the `@astrojs/compiler-rs` package installed for oxfmt to format `.astro` files.
-
-```ts
-import bachmanDev from "@bachman-dev/oxc-config/oxfmt";
-import { defineConfig } from "oxfmt";
-
-export default defineConfig(bachmanDev({}, { uiFrameworks: ["astro"] }));
 ```
 
 In your `oxlint.config.ts` file, set a default export of the `bachmanDevConfig` config method:

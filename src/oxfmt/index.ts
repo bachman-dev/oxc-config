@@ -12,7 +12,7 @@ function applySettings(config: OxfmtConfig, metadata: Partial<OxfmtConfigMetaDat
   }
 }
 
-export default function bachmanDev(overrides?: OxfmtConfig, options?: OxfmtConfigOptions): OxfmtConfig {
+export default function bachmanDev(options?: OxfmtConfigOptions, overrides?: OxfmtConfig): OxfmtConfig {
   const config: OxfmtConfig = {};
   applySettings(config, settings);
   for (const framework of options?.uiFrameworks ?? []) {
