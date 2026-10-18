@@ -1,6 +1,7 @@
-import type { DummyRuleMap, OxlintConfig, OxlintOverride } from "oxlint";
+import type { DummyRuleMap, OxlintConfig, OxlintEnv, OxlintOverride } from "oxlint";
 
 import type { LintPlugin, OverrideGlobSet, OxlintConfigOptions, OxlintRuleGroup, OxlintRuleMetadata } from "./types.ts";
+import uiFrameworks from "./ui-frameworks.ts";
 
 function hasSameGlobs(first?: string[], second?: string[]): boolean {
   if (typeof first === "undefined" || typeof second === "undefined") {
@@ -35,6 +36,33 @@ function mergeRuleGroups(groups: OxlintRuleGroup[]): OxlintRuleMetadata {
     }
   }
   return merged;
+}
+
+function getRulePlugin(rule: string): string {
+  const separator = rule.indexOf("/");
+  return separator === -1 ? "eslint" : rule.slice(0, separator);
+}
+
+function buildUiFrameworkOverrides(config: OxlintConfigOptions, baseRuleGroups: OxlintRuleGroup[]): OxlintOverride[] {
+  const builtOverrides: OxlintOverride[] = [];
+  const enabledPlugins = new Set<string>(baseRuleGroups.map((group) => group.plugin));
+  // A Set drops duplicates, so listing a framework twice doesn't add its override twice
+  for (const framework of new Set(config.uiFrameworks)) {
+    const metadata = uiFrameworks[framework];
+    const env: OxlintEnv = {};
+    for (const [name, value] of Object.entries(metadata.env)) {
+      env[name] = value.setting;
+    }
+    const rules: DummyRuleMap = {};
+    for (const [rule, value] of Object.entries(metadata.rules)) {
+      // Only adjust rules from plugins that are turned on, rather than switching a disabled plugin's rule back on
+      if (typeof value !== "undefined" && enabledPlugins.has(getRulePlugin(rule))) {
+        rules[rule] = value.settings;
+      }
+    }
+    builtOverrides.push({ files: metadata.files.globs(config), env, rules });
+  }
+  return builtOverrides;
 }
 
 export function buildPlugins(baseRuleGroups: OxlintRuleGroup[], overrides?: OxlintConfig): LintPlugin[] {
@@ -84,6 +112,8 @@ export function buildOverrides(
       override.rules[key] = value.override.settings;
     }
   }
+  // UI framework overrides come before the user's own, so the user can still override them per file
+  builtOverrides.push(...buildUiFrameworkOverrides(config, baseRuleGroups));
   if (typeof overrides === "object" && Array.isArray(overrides.overrides)) {
     builtOverrides.push(...overrides.overrides);
   }

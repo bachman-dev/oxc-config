@@ -47,6 +47,64 @@ We've organized the rules in each group into the following oxlint categories:
 - **Style:** Idiomatic and consistent style rules
 - **Nursery (optional):** Rules under development that may change (these will only emit a warning until they "graduate" into one of the other categories)
 
+## UI Frameworks
+
+Listing a framework in the `uiFrameworks` option (eg `bachmanDevConfig({ uiFrameworks: ["astro"] })`) adds an override for that framework's files. Rules from plugins you've turned off are left out of it, and any overrides you pass in yourself are applied after it.
+
+### Astro (`astro`)
+
+Oxlint lints the frontmatter and `<script>` tags of Astro components out of the box; these settings adjust the config to fit how Astro builds them.
+
+> [!NOTE]
+> `<script>` tags with the `is:inline` directive aren't processed by Astro, so their top-level declarations do become globals; keep those scripts wrapped in a block or IIFE.
+
+The override applies to Astro components: `**/*.astro`.
+
+#### Environments
+
+- `astro: true` -- Defines the `Astro` global that's available in component frontmatter
+- `browser: true` -- Defines browser globals such as `document` for the client-side code in `<script>` tags
+
+#### Rules
+
+##### [import/unambiguous](https://oxc.rs/docs/guide/usage/linter/rules/import/unambiguous)
+
+```json
+"off"
+```
+
+Astro always treats frontmatter and processed `<script>` tags as modules, even without any imports or exports
+
+##### [no-implicit-globals](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-globals)
+
+```json
+"off"
+```
+
+Astro bundles processed `<script>` tags as modules, so their top-level declarations don't leak into the global scope
+
+##### [unicorn/filename-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case)
+
+```json
+[
+  "error",
+  {
+    "cases": {
+      "camelCase": false,
+      "kebabCase": true,
+      "lowercase": false,
+      "pascalCase": true,
+      "screamingSnakeCase": false,
+      "snakeCase": false
+    },
+    "ignore": [],
+    "multipleFileExtensions": true
+  }
+]
+```
+
+Astro components are conventionally named in PascalCase (eg `Layout.astro`), while pages stay in kebab-case since their names become URLs
+
 ## Legend
 
 - 🛑 Throws a Linting Error for ALL Lintable Files

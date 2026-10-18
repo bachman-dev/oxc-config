@@ -14,3 +14,5 @@ export interface Admonishment {
   text: string;
   type: "caution" | "important" | "note" | "tip" | "warning";
 }
+
+export type UiFramework = "astro";

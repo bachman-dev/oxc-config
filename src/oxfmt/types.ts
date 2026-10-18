@@ -1,6 +1,6 @@
 import type { OxfmtConfig } from "oxfmt";
 
-import type { Admonishment, RemoveIndex } from "../types.ts";
+import type { Admonishment, RemoveIndex, UiFramework } from "../types.ts";
 
 export type OxfmtConfigMetaData = {
   [Setting in keyof RemoveIndex<Required<OxfmtConfig>>]: {
@@ -9,3 +9,13 @@ export type OxfmtConfigMetaData = {
     admonishments?: [first: Admonishment, ...rest: Admonishment[]];
   };
 };
+
+export interface OxfmtConfigOptions {
+  uiFrameworks?: UiFramework[];
+}
+
+export interface OxfmtUiFrameworkMetadata {
+  name: string;
+  settings: Partial<OxfmtConfigMetaData>;
+  admonishments?: [first: Admonishment, ...rest: Admonishment[]];
+}

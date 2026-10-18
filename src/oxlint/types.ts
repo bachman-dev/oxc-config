@@ -1,6 +1,6 @@
 import type { DummyRuleMap, OxlintConfig } from "oxlint";
 
-import type { Admonishment, RemoveIndex } from "../types.ts";
+import type { Admonishment, RemoveIndex, UiFramework } from "../types.ts";
 
 export interface OxlintConfigOptions {
   eslint?: boolean;
@@ -11,6 +11,7 @@ export interface OxlintConfigOptions {
   typescript?: boolean;
   unicorm?: boolean;
   vitest?: boolean | string[];
+  uiFrameworks?: UiFramework[];
 }
 
 export interface OverrideGlobSet {
@@ -49,3 +50,17 @@ export interface OxlintRuleGroup {
 
 export type JsDocSettings = NonNullable<NonNullable<OxlintConfig["settings"]>["jsdoc"]>;
 export type VitestSettings = NonNullable<NonNullable<OxlintConfig["settings"]>["vitest"]>;
+
+export interface OxlintUiFrameworkMetadata {
+  name: string;
+  description: string;
+  files: OverrideGlobSet;
+  env: Record<string, { setting: boolean; explanation: string }>;
+  rules: {
+    [Rule in keyof RemoveIndex<DummyRuleMap>]?: {
+      settings: DummyRuleMap[Rule];
+      explanation: string;
+    };
+  };
+  admonishments?: [first: Admonishment, ...rest: Admonishment[]];
+}

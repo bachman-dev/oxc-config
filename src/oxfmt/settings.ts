@@ -11,7 +11,8 @@ const settings: OxfmtConfigMetaData = {
   },
   astro: {
     setting: false,
-    explanation: "Generally set on a per-project basis",
+    explanation:
+      "Only Astro projects need this, so it's turned on by including `astro` in the `uiFrameworks` option (see UI Frameworks below)",
   },
   bracketSameLine: {
     setting: false,

@@ -55,6 +55,15 @@ export default defineConfig(
 );
 ```
 
+For a project built with a UI framework, pass the framework's name in the `uiFrameworks` option as the second parameter to turn on its formatting settings. Only `astro` is supported for now; Astro also needs the `@astrojs/compiler-rs` package installed for oxfmt to format `.astro` files.
+
+```ts
+import bachmanDev from "@bachman-dev/oxc-config/oxfmt";
+import { defineConfig } from "oxfmt";
+
+export default defineConfig(bachmanDev({}, { uiFrameworks: ["astro"] }));
+```
+
 In your `oxlint.config.ts` file, set a default export of the `bachmanDevConfig` config method:
 
 ```ts
@@ -71,6 +80,14 @@ import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
 export default bachmanDevConfig({ vitest: false });
 ```
 
+If the project is built with a UI framework, list it in the `uiFrameworks` option to add an override that fits that framework's files. Only `astro` is supported for now. Leaving the option out (the default) adds nothing.
+
+```ts
+import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
+
+export default bachmanDevConfig({ uiFrameworks: ["astro"] });
+```
+
 If the project needs a config change, you can override any oxlint settings by passing an override config as the second parameter.
 
 ```ts
@@ -80,8 +97,8 @@ export default bachmanDevConfig({ vitest: true }, { options: { typeAware: false,
 ```
 
 Both entry points re-export the config types they use, so you can name them without reaching for `oxlint` or `oxfmt`
-directly: `OxlintConfig` and `OxlintConfigOptions` from `@bachman-dev/oxc-config/oxlint`, and `OxfmtConfig` from
-`@bachman-dev/oxc-config/oxfmt`.
+directly: `OxlintConfig` and `OxlintConfigOptions` from `@bachman-dev/oxc-config/oxlint`, and `OxfmtConfig` and
+`OxfmtConfigOptions` from `@bachman-dev/oxc-config/oxfmt`. Both also export `UiFramework`.
 
 ```ts
 import bachmanDevConfig from "@bachman-dev/oxc-config/oxlint";
