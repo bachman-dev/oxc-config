@@ -189,7 +189,10 @@ const vitest: OxlintRuleGroup = {
     "vitest/consistent-test-filename": {
       settings: [
         "error",
-        { allTestPattern: "\\.(?:test|spec)(?:-d)?\\.[cm]?[jt]sx?$", pattern: "\\.test(?:-d)?\\.(?:[cm]?ts|tsx)$" },
+        {
+          allTestPattern: String.raw`\.(?:test|spec)(?:-d)?\.[cm]?[jt]sx?$`,
+          pattern: String.raw`\.test(?:-d)?\.(?:[cm]?ts|tsx)$`,
+        },
       ],
     },
     "vitest/consistent-test-it": {
