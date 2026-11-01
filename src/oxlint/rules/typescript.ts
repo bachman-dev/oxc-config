@@ -61,6 +61,9 @@ const typescript: OxlintRuleGroup = {
     "typescript/no-unnecessary-type-parameters": {
       settings: "error",
     },
+    "typescript/no-unsafe-enum-assignment": {
+      settings: "error",
+    },
     "typescript/no-unsafe-enum-comparison": {
       settings: "error",
     },
