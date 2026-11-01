@@ -1353,6 +1353,8 @@ These settings apply to all lintable files except test files when `vitest` is se
 
 #### [🛑 typescript/no-unnecessary-type-parameters](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-type-parameters)
 
+#### [🛑 typescript/no-unsafe-enum-assignment](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-enum-assignment)
+
 #### [🛑 typescript/no-unsafe-enum-comparison](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-enum-comparison)
 
 #### [🛑 typescript/no-unsafe-type-assertion](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-type-assertion)
