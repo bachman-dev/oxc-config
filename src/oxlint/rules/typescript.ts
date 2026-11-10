@@ -40,6 +40,9 @@ const typescript: OxlintRuleGroup = {
     "typescript/no-generated-empty-object-type": {
       settings: "error",
     },
+    "typescript/no-non-null-asserted-nullish-coalescing": {
+      settings: "error",
+    },
     "typescript/no-unnecessary-boolean-literal-compare": {
       settings: ["error", { allowComparingNullableBooleansToFalse: true, allowComparingNullableBooleansToTrue: true }],
     },
@@ -120,9 +123,6 @@ const typescript: OxlintRuleGroup = {
     },
     "typescript/no-namespace": {
       settings: ["error", { allowDeclarations: false, allowDefinitionFiles: true }],
-    },
-    "typescript/no-non-null-asserted-nullish-coalescing": {
-      settings: "error",
     },
     "typescript/no-non-null-assertion": {
       settings: "error",

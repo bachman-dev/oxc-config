@@ -1327,6 +1327,8 @@ These settings apply to all lintable files except test files when `vitest` is se
 
 #### [🛑 typescript/no-generated-empty-object-type](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-generated-empty-object-type)
 
+#### [🛑 typescript/no-non-null-asserted-nullish-coalescing](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-non-null-asserted-nullish-coalescing)
+
 #### [🛑 typescript/no-unnecessary-boolean-literal-compare](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-boolean-literal-compare)
 
 ##### Settings
@@ -1436,8 +1438,6 @@ These settings apply to all lintable files except test files when `vitest` is se
 ```json
 { "allowDeclarations": false, "allowDefinitionFiles": true }
 ```
-
-#### [🛑 typescript/no-non-null-asserted-nullish-coalescing](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-non-null-asserted-nullish-coalescing)
 
 #### [🛑 typescript/no-non-null-assertion](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-non-null-assertion)
 
@@ -1868,6 +1868,8 @@ Powerful rules ported from `eslint-plugin-unicorn` for better code style and qua
 > [!TIP]
 > Use a schema validation library that conforms to [Standard Schema](https://standardschema.dev/schema) for validating built-in types across your codebase.
 
+#### [🛑 unicorn/no-useless-error-capture-stack-trace](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-error-capture-stack-trace)
+
 #### [🛑 unicorn/prefer-add-event-listener](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-add-event-listener)
 
 #### [🛑 unicorn/require-module-specifiers](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/require-module-specifiers)
@@ -1925,8 +1927,6 @@ Powerful rules ported from `eslint-plugin-unicorn` for better code style and qua
 #### [🛑 unicorn/no-magic-array-flat-depth](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-magic-array-flat-depth)
 
 #### [🛑 unicorn/no-process-exit](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-process-exit)
-
-#### [🛑 unicorn/no-useless-error-capture-stack-trace](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-error-capture-stack-trace)
 
 #### [🛑 unicorn/prefer-modern-math-apis](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-modern-math-apis)
 
