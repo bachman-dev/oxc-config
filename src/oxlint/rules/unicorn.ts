@@ -44,6 +44,9 @@ const unicorn: OxlintRuleGroup = {
         },
       ],
     },
+    "unicorn/no-useless-error-capture-stack-trace": {
+      settings: "error",
+    },
     "unicorn/prefer-add-event-listener": {
       settings: "error",
     },
@@ -130,9 +133,6 @@ const unicorn: OxlintRuleGroup = {
       settings: "error",
     },
     "unicorn/no-process-exit": {
-      settings: "error",
-    },
-    "unicorn/no-useless-error-capture-stack-trace": {
       settings: "error",
     },
     "unicorn/prefer-modern-math-apis": {
