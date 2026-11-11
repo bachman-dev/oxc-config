@@ -50,6 +50,7 @@ export default function bachmanDevConfig(userOptions?: OxlintConfigOptions, over
       ...overrides?.categories,
     },
     options: {
+      reportUnusedDisableDirectives: "error",
       typeAware: true,
       typeCheck: true,
       ...overrides?.options,

@@ -10,7 +10,7 @@ Here is a generated config when `bachmanDevConfig` is exported without disabling
 ```json
 {
   "categories": { "correctness": "error" },
-  "options": { "typeAware": true, "typeCheck": true },
+  "options": { "reportUnusedDisableDirectives": "error", "typeAware": true, "typeCheck": true },
   "env": { "es2025": true },
   "globals": {},
   "settings": {
